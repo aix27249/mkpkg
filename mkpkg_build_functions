@@ -488,7 +488,7 @@ copy_doinst() {
 	fi
 
 	if [ -e "$startdir/postremove.sh" ]; then
-		cp "$startdir/postremove.sh" > "$pkgdir/install/postremove.sh"
+		cp "$startdir/postremove.sh" "$pkgdir/install/postremove.sh"
 	fi
 
 	case `file -b $startdir/doinst.sh*` in
