@@ -1,3 +1,11 @@
+1.2.2.8.4
+FIXED: error # 1741
+FIXED: error #1743 (no_postperm)
+ADD:   translation help into Ukrainian
+FIXED: ib option: it does not accept any parameters 
+-
+1.2.2.8.3
+-
 1.2.2.8.2
 FIXED: install-info murmuring,#1719
 -
