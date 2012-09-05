@@ -10,113 +10,232 @@ SHOW_USAGE)############################################################
 	ru)
 cat <<EOFUSAGE
 mkpkg - скрипт bash для генерации SlackBuild по файлу шаблона ABUILD.
-Внутренняя версия скрипта $internal_version
+Внутренняя версия скрипта $internal_version.
 Без опций командной строки попытается загрузить ABUILD из текущей директории.
 Можно использовать следующие опции командной строки:
- -bt --build-tree=foo.build_tree.tar.xz: использовать дерево сборки
- -bv --bump-version=NEW_VER	: изменить текущую версию в ABUILD
-				  на NEW_VER
- -bb --bump-build=NEW_BUILD	: изменить текущий билд в ABUILD
-				: на NEW_BUILD
- -ib				: автоматически увеличить номер билда на единицу
- -ubt --unpack_build_tree=PKG   : извлечь из пакета PKG дерево сборки
- -i --install			: установить пакет после сборки (только от ROOT)
- -si --sudo-install		: установить пакет после сборки (необходимо настроить sudo!)
- -h --help 			: показать эту справку и выйти
- -nc --no-cleanup 		: не очищать временные директории после сборки 
- r 				: не очищать временные директории перед сборкой 
-				  и не распаковывать исходники.
-				  Полезно для возобновления прервавщейся из-за
-				  ошибки сборки
- -c --copy-abuild 		: скопировать пустой шаблон в текущую директорию
+				
+ -bt --build-tree=foo.build_tree.tar.xz:
+				  Использовать дерево сборки.
+				
+ -bv --bump-version=NEW_VER	: Изменить текущую версию в ABUILD
+				  на NEW_VER.
+				
+ -bb --bump-build=NEW_BUILD	: Изменить текущий билд в ABUILD
+				: на NEW_BUILD.
+				
+ -ib				: Автоматически увеличить номер билда на единицу.
+				
+ -ubt --unpack_build_tree=PKG   : Извлечь из пакета PKG дерево сборки.
+				
+ -i --install			: Установить пакет после сборки (только от ROOT)
+				
+ -si --sudo-install		: Установить пакет после сборки (необходимо настроить sudo!)
+				
+ -h --help 			: Показать эту справку и выйти.
+				
+ -nc --no-cleanup 		: Не очищать временные директории после сборки.
+				
+ r 				: Не очищать временные директории перед сборкой
+				  и не распаковывать исходники. Полезно для
+				  возобновления прервавщейся из-за ошибки сборки.
+				
+ -c --copy-abuild 		: Скопировать пустой шаблон в текущую директорию.
 				  Дополнительным параметром можно указать имя
 				  шаблона системы сборки. Список имён:
-				    cmake qmake python perl waf scons
-				  По-умолчанию используется autotools
+				  cmake qmake python perl waf scons
+				  По-умолчанию используется autotools.
 				  Для пустого шаблона используйте шаблон 'c'
- -wd				: имя директории, где будет проходить сборка пакета
- -pod				: имя директории, куда будет помещён готовый пакет
- -wdm				: режим выбора временных каталогов:
-				  cwd - все операции проходят в текущем каталоге
-				  remote - используются пути из конфигурационного файла
+				
+ -wd				: Имя директории, где будет проходить сборка пакета.
+				
+ -pod				: Имя директории, куда будет помещён готовый пакет.
+				
+ -wdm				: Режим выбора временных каталогов:
+				  cwd - все операции проходят в текущем каталоге.
+				  remote - используются пути из конфигурационного файла.
 				  auto - пути из конфигурационного файла используются
-					только при сборке из дерева (build tree)
-
- -ccd				: очистить директорию с исходниками и выйти
- -cpd				: очистить директорию с готовыми пакетами и выйти
-
- -po --parent-only		: собирает только основной пакет в мультипакетных ABUILD
- -ad --append-deps		: добавлять зависимости пакета (после сборки) в ABUILD
-				  сборки в качестве build_deps
-
- -64 пакет|директория		: конвертировать 32битный пакет в 64 битный без замены
+				  только при сборке из дерева (build tree).
+				
+ -ccd				: Очистить директорию с исходниками и выйти.
+				
+ -cpd				: Очистить директорию с готовыми пакетами и выйти.
+				
+ -po --parent-only		: Собирает только основной пакет в мультипакетных ABUILD.
+				
+ -ad --append-deps		: Добавлять зависимости пакета (после сборки) в ABUILD.
+				  Сборки в качестве build_deps
+				
+ -64 пакет|директория		: Конвертировать 32битный пакет в 64 битный без замены
 				  директорий (для пакетов wine,skype).
- -c64 пакет|директория		: конвертировать 32битный пакет в 64битный пакет с
-				  заменой директорий (compat32 пакеты)
-
- -sv --skip-validate		: выключить валидацию пакета после сборки
- -sgd --skip-gendeps		: не генерировать зависимости для пакета
-
- -v --version 			: показать версию скрипта и выйти
- -d --debug			: включить отладку (set -xv). Так же включается -nc
+				
+ -c64 пакет|директория		: Конвертировать 32битный пакет в 64битный пакет с
+				  заменой директорий (compat32 пакеты).
+				
+ -sv --skip-validate		: Выключить валидацию пакета после сборки.
+				
+ -sgd --skip-gendeps		: Не генерировать зависимости для пакета.
+				
+ api:<Имя Пакета>		: Взять ABUILD из репозитория
+				
+ -v --version 			: Показать версию скрипта и выйти.
+				
+ -d --debug			: Включить отладку (set -xv). Так же включается -nc
 EOFUSAGE
 ;;
-#	    uk)
-	    *)
+	uk)
+cat <<EOFUSAGE
+mkpkg - скрипт bash для генерації SlackBuild по файлу шаблону ABUILD.
+Внутрішня версія скрипта $internal_version.
+Без опцій командного рядка спробує завантажити ABUILD з поточної директорії.
+Можливо використовувати такі опції командного рядка:
+				
+ -bt --build-tree=foo.build_tree.tar.xz:
+				  Використовувати дерево зборки.
+				
+ -bv --bump-version=NEW_VER<--->: Змінити поточну версію у ABUILD
+				  на NEW_VER.
+				
+ -bb - bump-build = NEW_BUILD	: Змінити поточний білд в ABUILD
+				: На NEW_BUILD.
+				
+ -ib				: Автоматично збільшити номер білду на одиницю.
+				
+ -ubt --unpack_build_tree=PKG   : Витягти з пакета PKG дерево зборки.
+				
+ -i --install			: Встановити пакет після зборки (тільки від ROOT)
+				
+ -si --sudo-install		: Встановити пакет після зборки (необхідно налаштувати sudo!)
+				
+-h --help			: Показати цю довідку і вийти.
+				
+-nc --no-cleanup		: Не очищати тимчасові директорії після збірки.
+				
+ r 				: Не очищати тимчасові директорії перед зборкою
+				  і не розпаковувати исходники. Корисно для
+				  відновлення прервавщейся через помилки зборки.
+				
+ -c --copy-abuild 		: Скопіювати порожній шаблон в поточну директорію.
+				  Додатковим параметром можна вказати ім'я
+				  шаблону системи збирання. Список імен:
+				  cmake qmake python perl waf scons
+				  По-замовчуванню використовується autotools.
+				  Для порожнього шаблону використовуйте шаблон 'C'
+				
+ -wd				: Ім'я директорії, де буде проходити збірка пакету.
+				
+ -pod				: Ім'я директорії, куди буде поміщений готовий пакет.
+				
+ -wdm				: Режим вибору тимчасових каталогів:
+				  cwd - всі операції проходять в поточному каталозі.
+				  remote - використовуються шляхи з конфігураційного файлу.
+				  auto - шляхи з конфігураційного файлу використовуються
+				  тільки при зборці з дерева (build tree).
+				
+ -ccd				: Очистити директорію з исходниками і вийти.
+				
+ -cpd				: Очистити директорію з готовими пакетами і вийти.
+				
+ -po --parent-only		: Збирає тільки основний пакет в мультіпакетних ABUILD.
+				
+ -ad --append-deps		: Додавати залежності пакета (після зборки) в ABUILD.
+				  Збірки в якості build_deps
+				
+ -64 пакет|директорія		: Конвертувати 32бітний пакет в 64 бітний без заміни
+				  директорій (для пакетів wine,skype).
+				
+ -c64 пакет|директорія		: Конвертувати 32бітний пакет в 64бітний пакет з
+				  заміною директорій (compat32 пакети).
+				
+ -sv --skip-validate		: Вимкнути валідацію пакета після збірки.
+				
+ -sgd --skip-gendeps		: Не генерувати залежності для пакета.
+				
+ api:<им'я пакету>		: Взяти ABUILD з репозиторія
+				
+ -v --version 			: Показати версію скрипта і вийти.
+				
+-d --debug			: Включити налагодження (set -xv). Так само включає -nc
+EOFUSAGE
+;;
+	*)
 cat << EOFUSAGE
 mkpkg - a bash script, designed to generate a SlackBuild according to ABUILD file.
 Internal version $internal_version.
 Without options it will try to load ABUILD from current directory
 You can use following options:
- -bt --build-tree=foo.build_tree.tar.xz : build package from specified
-					  build tree archive
- -bv --bump-version=NEW_VER		: change package version to
-					  NEW_VER in ABUILD
- -bv --bump-build=NEW_BUILD		: change package build to
-					  NEW_BUILD in ABUILD
- -ib					: auto increase build number by 1
- -ubt --unpack-build-tree=PKG		: unpack build tree archive from
-					: package PKG					  
- -i --install				: install package after building (need ROOT priv.)
- -si --sudo-install			: install package after building (configure sudo first!)
- -h --help 				: show this help and exit
- -nc --no-cleanup 			: do not clear temp directories after
-					  build
- -r 					: do not clean temp directoruies before
-					  build, and do not unpack sources.
-					  Useful when compiling failed due to 
-					  errors.
- -c --copy-abuild 			: copy an empty ABUILD template to 
-					  current directory. You can specify 
-					  expected build system with second 
-					  parameter, which is template name. 
-					  List of templates:
-					  cmake python qmake perl waf scons
-					  autotools is the default.
-					  To specify empty tepmplate type 'c' as
-					  parameter
- -wd					: temporary dir where package will be build
- -pod					: directory where compiled package will be placed
- -wdm					: switch temporary dirs in
-					    cwd - all operations are placed in current dir
-					    remote - use dirs from config file
-					    auto - use dir from config if building
-						from build tree
- -ccd					: clean cache dir with sources and exit
- -cpd					: clean dir with compiled packages and exit
- -od --overwritre-slackdesc 		: overwrite slack-desc with data from
-					  ABUILD
- -po --parent-only			: build only first package in multipackage ABUILD
- -ad --append-deps			: add package dependencies (after building)
-					  into ABUILD as build_deps
- -64 package|dir			: convert 32bit package to 64 without
-					  changing dirs (for wine,skype)
- -c64 package|dir			: convert 32bit package to 64 with
-					  changing dirs (compat32 packages)
- -sv --skip-validate			: do not validate package after build
- -sgd --skip-gendeps			: do not generate dependencies
- -v --version 				: show script version and exit
- -d --debug				: turn on debug (set -vx). -nc option is on
+ -bt --build-tree=foo.build_tree.tar.xz : 
+				  Build package from specified
+				  build tree archive.
+				
+ -bv --bump-version=NEW_VER	: Change package version to
+				  NEW_VER in ABUILD.
+				
+ -bv --bump-build=NEW_BUILD	: Change package build to
+				  NEW_BUILD in ABUILD.
+				
+ -ib				: Auto increase build number by 1
+				
+ -ubt --unpack-build-tree=PKG	: Unpack build tree archive from
+				: package PKG.
+				
+ -i --install			: Install package after building (need ROOT priv.)
+				
+ -si --sudo-install		: Install package after building (configure sudo first!)
+				
+ -h --help 			: Show this help and exit.
+ -nc --no-cleanup 		: Do not clear temp directories after build.
+				
+ -r 				: Do not clean temp directoruies before
+				  build, and do not unpack sources.
+				  Useful when compiling failed due to 
+				  errors.
+				
+ -c --copy-abuild 		: Copy an empty ABUILD template to 
+				  current directory. You can specify 
+				  expected build system with second 
+				  parameter, which is template name. 
+				  List of templates:
+				  cmake python qmake perl waf scons
+				  autotools is the default.
+				  To specify empty tepmplate type 'c' as
+				  parameter.
+				
+ -wd				: Temporary dir where package will be build.
+				
+ -pod				: Directory where compiled package will be placed.
+				
+ -wdm				: Switch temporary dirs in
+				  cwd - all operations are placed in current dir
+				  remote - use dirs from config file
+				  auto - use dir from config if building
+				  from build tree.
+				
+ -ccd				: Clean cache dir with sources and exit.
+				
+ -cpd				: Clean dir with compiled packages and exit.
+				
+ -od --overwritre-slackdesc 	: Overwrite slack-desc with data from ABUILD.
+				
+ -po --parent-only		: Build only first package in multipackage ABUILD.
+				
+ -ad --append-deps		: Add package dependencies (after building)
+				  into ABUILD as build_deps.
+				
+ -64 package|dir		: Convert 32bit package to 64 without
+				  changing dirs (for wine,skype).
+				
+ -c64 package|dir		: Convert 32bit package to 64 with
+				  changing dirs (compat32 packages).
+				
+ -sv --skip-validate		: Do not validate package after build.
+				
+ -sgd --skip-gendeps		: Do not generate dependencies.
+				
+ api: <Package Name>		: Take ABUILD from the repository.
+				
+ -v --version 			: Show script version and exit.
+				
+ -d --debug			: Turn on debug (set -vx). -nc option is on
 EOFUSAGE
 ;;
 esac
@@ -127,12 +246,13 @@ MKPKG_VER)############################################################
 #############
 case $lang in
 ru) echo "Версия скрипта ${MKPKG_VER}"
-    echo "Мейнтейнер: ${mn} ; Электропочта: ${me}"
+    echo "Мейнтейнер: ${mn} ; Электронная почта: ${me}"
 	;;
-#uk) echo "Версія скрипта $internal_version" ;;
-*) echo "mkpkg script version ${MKPKG_VER}"
-   echo "Maintainer: ${mn} ; E-Mail: {me}"
-    ;;
+uk) echo "Версія скрипта ${MKPKG_VER}"
+    echo "Мейнтейнер: ${mn} ; E-Mail: {me}"
+	;;
+*)  echo "mkpkg script version ${MKPKG_VER}"
+    echo "Maintainer: ${mn} ; E-Mail: ${me}"
 esac
 ;;
 
