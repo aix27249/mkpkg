@@ -427,23 +427,22 @@ set_post_permissions() {
 	if [ "${NO_POSTPERM}" != "1" ]; then
 		find "${pkgdir}" -type f -perm /o+w -exec chmod o-w {} \;
 		find "${pkgdir}" -type d -perm /o+w -exec chmod o-w {} \;
-		for DIRS in usr/share usr/doc usr/share/doc; do
+		find "${pkgdir}" -type d -exec chmod 755 {} \;
+		chown root:root -R "${pkgdir}"
+		for DIRS in usr/doc usr/share/doc; do
 			if [ -d "${pkgdir}/$DIRS" ]; then
 				if [ "$DIRS" == "usr/doc" -o "${DIRS}" == "usr/share/doc" ]; then
 					find "${pkgdir}/$DIRS" -type f -exec chmod 644 {} \;
-					find "${pkgdir}/$DIRS" -type d -exec chmod 755 {} \;
 				fi
 			fi
-			[ -d "${pkgdir}/$DIRS" ] && chown root:root -R "${pkgdir}/$DIRS"
 		done
 	fi
-	for DIRS in etc bin sbin usr/bin usr/sbin boot dev sys; do
-		if [ -d "${pkgdir}/$DIRS" ]; then
-			find "${pkgdir}/$DIRS" -type d -exec chmod 755 {} \;
-		fi
-		[ -d "${pkgdir}/$DIRS" ] && chown root:root -R "${pkgdir}/$DIRS"
+	for DIRS in etc bin dev sbin usr usr/bin usr/sbin boot dev sys lib lib64 usr/lib usr/lib64 var ; do
+		[ -d "${pkgdir}/$DIRS" ] && chmod 755 "${pkgdir}/$DIRS"
+		[ -d "${pkgdir}/$DIRS" ] && chown root:root "${pkgdir}/$DIRS"
 	done
-	[ -d "${pkgdir}/usr/bin" ] && find "${pkgdir}/usr/bin" -user root -group bin -exec chown root:root {} \;
+	find ${lazdir} -perm 2777 -exec chmod 755 {} \;
+	find ${lazdir} -perm 0777 -exec chmod 755 {} \;
 	[ -d "${pkgdir}/tmp" ] && chmod -R o+t,a+rwx "${pkgdir}/tmp"
 	set -e
 }
