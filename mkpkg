@@ -56,6 +56,14 @@ wdm_check() {
 	d_echo "wdm_check() end"
 }
 
+not_root() {
+if ! [ "${FORCE_ROOT}" = "1" ]; then 
+	if [ `whoami` = "root" ]; then
+		show_message NOT_ROOT
+		exit 1
+	fi
+fi
+}
 
 #get maintainer name and email from mpkg
 get_maintainer() {
@@ -156,8 +164,7 @@ check_remote_dirs() {
 }   
 
 #command line options parser
-set_options()
-{
+set_options(){
 	d_echo "set_options()"
 	startdir="$(pwd)"
 	REAL_CWD="${startdir}"
@@ -166,14 +173,13 @@ set_options()
 	else
 		srcache="${startdir}"
 	fi
-
 while [ ! -z "$1" ]; do 
 	case $1 in 
 		-nc|--no-cleanup)
 			NOT_CLEAR_SOURCE=1
 			;;
-		-rsvn|--remove-svn)
-			REMOVE_SVN=1
+		-fr|--force-root)
+			FORCE_ROOT=1
 			;;
 		-ns|--no-strip)
 			NO_STRIP=1
@@ -904,6 +910,7 @@ del_work_dir() {
 check_config
 get_maintainer
 set_options $*
+not_root
 prepare_abuild
 cat <<"AGB_HEADER" >"${startdir}/${tmp_pkg_name}.AgiliaBuild"
 #!/bin/bash

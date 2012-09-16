@@ -185,6 +185,8 @@ unpack()
 		cmd="bunzip2 -f" ;;
 		*application/x-rar*)
 		cmd="unrar e" ;;
+		*application/x-rpm*)
+		cmd=`rpm2cpio ${file_2_unpack} | cpio -dimv` ;;
 	esac
 	if [ "$cmd" != "" ]; then
 		show_message BEGIN_UNPACK ${file_2_unpack}
