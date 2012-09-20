@@ -113,7 +113,9 @@ check_config() {
 					;;
 			esac
 		fi
-
+		if [ "${interactive}" == "yes" ]; then
+		INTERACTIVE=1
+		fi
 		if [ "${bad}" == "1" ];then
 			exit 1
 		fi
@@ -297,12 +299,12 @@ while [ ! -z "$1" ]; do
 			;;
 		-c64*)
 			shift
-			fakeroot mkpkg_32to64 $*
+			fakeroot /sbin/mkpkg_32to64 $*
 			exit
 			;;
 		-64*)
 			shift
-			fakeroot mkpkg_make64 $*
+			fakeroot /sbin/mkpkg_make64 $*
 			exit
 			;;
 		-sv|--skip-validate)
@@ -313,6 +315,9 @@ while [ ! -z "$1" ]; do
 			;;
 		-po|--parent-only)
 			PARENT_ONLY=1
+			;;
+		--builddeps-autoinstall)
+			BUILDDEPS_AUTO_INSTALL=1
 			;;
 		-d|--debug)
 			set -xv
@@ -699,7 +704,8 @@ check_abuild() {
 		fi
 		if [ -z "$system_pkg_ver" ]; then
 			show_message BUILD_DEP_NOT_FOUND $b_dep
-			bad=1
+			INSTALL_BUILDDEPS=1
+			ipkglist+=${dep_name}' '
 		fi
 		if [ -n "${dep_ver}" -a -n "${system_pkg_ver}" ];then
 			local cmp_bad=0
@@ -726,10 +732,23 @@ check_abuild() {
 			bad=1
 		fi
 	done
-	if [ "${bad}" == "1" ]; then
-		exit 1
+if [ "${INSTALL_BUILDDEPS}" == "1" ]; then
+	if [ "${BUILDDEPS_AUTO_INSTALL}" == "1" ]; then
+		mpkg -y install ${ipkglist}
+	else
+		if [ "${INTERACTIVE}" == "1" ]; then
+			mpkg install ${ipkglist}
+		else
+			bad=1
+		fi
 	fi
-
+	if [ "$?" == "1" ]; then
+		bad=1
+	fi
+fi
+if [ "${bad}" == "1" ]; then
+	exit 1
+fi
 }
 
 #check set of vars for existance
