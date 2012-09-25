@@ -515,12 +515,12 @@ copy_doinst() {
 	fi
 
 	case `file -b $startdir/doinst.sh*` in
-		ASCII*| *"shell script text executable")
-			install -m755 "$startdir"/doinst.sh "$pkgdir"/install/doinst.sh
-			;;
 		gzip*)
 			zcat "$startdir"/doinst.sh.gz > "$pkgdir"/install/doinst.sh
 			chmod 755 "$pkgdir"/install/doinst.sh
+			;;
+		*ASCII*)
+			install -m755 "$startdir"/doinst.sh "$pkgdir"/install/doinst.sh
 			;;
 	esac
 }
