@@ -798,6 +798,7 @@ unsetter() {
 	SKIP_GENDEPS=${CLI_SKIP_GENDEPS}
 	NO_STRIP=${CLI_NO_STRIP}
 	NO_POSTPERM=${CLI_NO_POSTPERM}
+	NO_COPYDOC=${CLI_NO_COPYDOC}
 }
 
 set_custom_opts() {
@@ -819,6 +820,9 @@ set_custom_opts() {
 				no_ccache)
 					export CC="gcc"
 					export CXX="g++"
+					;;
+				no_copydoc)
+					NO_COPYDOC=${CLI_NO_COPYDOC:-1}
 					;;
 				*)
 					show_message UNKNOWN_CUSTOM_OPT ${opt}
@@ -850,9 +854,13 @@ else
 	fi
 	autobuild
 fi
+set +e
 
-copy_doc
+if ! [ "${NO_COPYDOC}" == "1" ]; then
+   copy_doc
+fi
 
+set -e
 if [ "$(grep '^after_build\(\)' "${startdir}/ABUILD")" ]; then
 	after_build
 fi

@@ -970,6 +970,7 @@ echo "NOT_CLEAR_SOURCE=\"${NOT_CLEAR_SOURCE}\"" >> "$startdir/${tmp_pkg_name}.Ag
 echo "CLI_NO_STRIP=${NO_STRIP}" >> "$startdir/${tmp_pkg_name}.AgiliaBuild"
 echo "APPEND_DEPS=${APPEND_DEPS}" >> "$startdir/${tmp_pkg_name}.AgiliaBuild"
 echo "CLI_NO_POSTPERM=${NO_POSTPERM}" >> "$startdir/${tmp_pkg_name}.AgiliaBuild"
+echo "CLI_NO_COPYDOC=${NO_COPYDOC}" >> "$startdir/${tmp_pkg_name}.AgiliaBuild"
 echo "CLI_SKIP_VALIDATE=${skip_validate}" >> "$startdir/${tmp_pkg_name}.AgiliaBuild"
 echo "CLI_SKIP_GENDEPS=${SKIP_GENDEPS}" >> "$startdir/${tmp_pkg_name}.AgiliaBuild"
 echo "MKPKG_DEBUG=${MKPKG_DEBUG}" >> "$startdir/${tmp_pkg_name}.AgiliaBuild"
