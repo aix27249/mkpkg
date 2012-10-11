@@ -63,7 +63,7 @@
 |-
 |'''-fr --force-root'''             || Убрать запрет на запуск от root.
 |-
-|'''--builddeps-autoinstall'''      || Авто установка пакетов из списка builddeps.
+|'''-ba --builddeps-autoinstall'''  || Авто установка пакетов из списка builddeps.
 |-
 |'''-v --version'''                 || Показать версию скрипта и выйти.
 |-

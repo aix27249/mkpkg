@@ -80,7 +80,7 @@ mkpkg - скрипт bash для генерации SlackBuild по файлу �
 				
  -fr --force-root		: Убрать запрет на запуск от root.
 				
- --builddeps-autoinstall	: Авто установка пакетов из списка builddeps.
+ -ba --builddeps-autoinstall	: Авто установка пакетов из списка builddeps.
 				
  -v --version 			: Показать версию скрипта и выйти.
 				
@@ -160,7 +160,7 @@ mkpkg - скрипт bash для генерації SlackBuild по файлу �
 				
  -fr --force-root		: Прибрати заборону на запуск від root.
 				
- --builddeps-autoinstall	: Авто установка пакетів зі списку builddeps.
+ -ba --builddeps-autoinstall	: Авто установка пакетів зі списку builddeps.
 				
  -v --version 			: Показати версію скрипта і вийти.
 				
@@ -243,7 +243,7 @@ You can use following options:
 				
  -fr --force-root		: Cancel prohibition to run from root.
 				
- --builddeps-autoinstall	: Auto install packages from the list builddeps.
+ -ba --builddeps-autoinstall	: Auto install packages from the list builddeps.
 				
  -v --version 			: Show script version and exit.
 				

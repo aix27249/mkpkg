@@ -836,23 +836,19 @@ get_extract_source
 get_numjobs
 set_build_options
 
+set -e
 if [ "${USE_CUSTOM}" == "1" -o "${build_exists}" == "1" ]; then
 	if [ "$(grep '^before_build\(\)' "${startdir}"/ABUILD)" ]; then
 		before_build
 	fi
-	set -e
 	build
-	set +e
-
 else
 	go_src_dir
 	burn_patches
 	if [ "$(grep '^before_build\(\)' "${startdir}"/ABUILD)" ]; then
 		before_build
 	fi
-	set -e
 	autobuild
-	set +e
 fi
 
 copy_doc
@@ -860,6 +856,7 @@ copy_doc
 if [ "$(grep '^after_build\(\)' "${startdir}/ABUILD")" ]; then
 	after_build
 fi
+set +e
 
 copy_doinst
 gzip_man_and_info_pages

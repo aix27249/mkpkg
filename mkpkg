@@ -318,7 +318,7 @@ while [ ! -z "$1" ]; do
 		-po|--parent-only)
 			PARENT_ONLY=1
 			;;
-		--builddeps-autoinstall)
+		-ba|--builddeps-autoinstall)
 			BUILDDEPS_AUTO_INSTALL=1
 			;;
 		-d|--debug)
