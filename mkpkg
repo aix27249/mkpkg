@@ -707,7 +707,7 @@ check_abuild() {
 		if [ -z "$system_pkg_ver" ]; then
 			show_message BUILD_DEP_NOT_FOUND $b_dep
 			INSTALL_BUILDDEPS=1
-			ipkglist+=${dep_name}' '
+			ipkglistdep+=${dep_name}' '
 		fi
 		if [ -n "${dep_ver}" -a -n "${system_pkg_ver}" ];then
 			local cmp_bad=0
@@ -736,10 +736,10 @@ check_abuild() {
 	done
 if [ "${INSTALL_BUILDDEPS}" == "1" ]; then
 	if [ "${BUILDDEPS_AUTO_INSTALL}" == "1" ]; then
-		mpkg -y install ${ipkglist}
+		mpkg -y install ${ipkglistdep}
 	else
 		if [ "${INTERACTIVE}" == "1" ]; then
-			mpkg install ${ipkglist}
+			mpkg install ${ipkglistdep}
 		else
 			bad=1
 		fi
