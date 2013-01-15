@@ -187,6 +187,8 @@ unpack()
 		cmd="unrar e" ;;
 		*application/x-rpm*)
 		cmd=`rpm2cpio ${file_2_unpack} | cpio -dimv` ;;
+		*application/x-deb*)
+		cmd=`ar -p ${file_2_unpack} data.tar.gz | tar zx` ;;
 	esac
 	if [ "$cmd" != "" ]; then
 		show_message BEGIN_UNPACK ${file_2_unpack}
