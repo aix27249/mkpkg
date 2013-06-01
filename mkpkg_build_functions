@@ -332,6 +332,7 @@ autobuild() {
 			MAKE_KEYS+=" -j${numjobs}"
 			MAKE_WORD=${MAKE_WORD:-make}
 			BUILD_WORD=${BUILD_WORD:-"LDFLAGS=\"$SLKLDFLAGS\" CFLAGS=\"$SLKCFLAGS\" CXXFLAGS=\"$SLKCFLAGS\" ./configure"}
+			BUILD_KEYS=${BUILD_KEYS:-"--prefix=/usr --libdir=/usr/lib$LIBDIRSUFFIX --mandir=/usr/man --sysconfdir=/etc"}
 			INSTALL_WORD=${INSTALL_WORD:-"make install"}
 			INSTALL_KEYS=${INSTALL_KEYS:-"DESTDIR=$pkgdir"}
 			if [ "$enable_distcc" = "yes" ] ; then
