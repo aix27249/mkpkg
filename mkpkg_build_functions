@@ -696,7 +696,10 @@ create_package() {
 gen_meta_options(){
 	META_OPTIONS="--keep-symlinks --name=${pkgname} --version=${pkgver//-/_} --arch=${ARCH} --build=${pkgbuild//-/_} "
 	for tag in ${tags// / } ;do
-		META_OPTIONS+="--add-tag=$tag "
+		if [ -n "$(echo ${tag} | grep -w 'compat32')" ]; then
+			continue
+		fi
+		META_OPTIONS+="--add-tag=${tag} "
 	done
 
 	if [ -e "$startdir"/CHANGELOG -a "$(parent_package) ${pkgname}" ]; then
