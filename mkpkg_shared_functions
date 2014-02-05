@@ -27,7 +27,7 @@ find_package_directory() {
   [ -z "${pkg_arch}" ] && pkg_arch="*"
   cd "${pkg_dir}"
   for n in ${pkg_arch} ; do
-      for i in $(find . -name "${newdep_name}*-${n}-*.txz") ; do
+      for i in $(find . -name "${newdep_name}-[0-9]*-${n}-[0-9]*.txz") ; do
           eval ${result_func}="$i"
           return
       done

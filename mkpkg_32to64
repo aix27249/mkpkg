@@ -152,6 +152,11 @@ check_deps() {
   show_message CHECKING_PACKAGE_DEPS "«${newdep_name}»"
   local dep_ver=$(echo ${newdep_tail} | sed 's/^[>=<]*//g')
   local find_package=""
+  local name_four=`echo "${newdep_name}" | sed 's/\(.\{1,4\}\).*/\1/'`
+  if [ "${name_four}" = "wine" ]; then
+     echo -e "\e[31mAdd because the first four characters wine\e[0m"
+     return 1
+  fi
   find_package_directory find_package ${package_out_dir} "i686 noarch"
   if [ -z "${find_package}" ]; then
      find_package_directory find_package ${mpkg_cache_dir} "i686 noarch"
@@ -212,12 +217,17 @@ modify_deps() {
       newdep_tail="$(echo $d | sed 's/^[^>=<!]*//g')"
       set +e
       check_deps
-      if [ $? = 1 ]; then
+      local res_check_deps=$?
+      if [ ${res_check_deps} = 2 ]; then
          show_message NOT_ADDED_PACKAGE_DEPS "«${newdep_name}»"
          continue
       fi
       set -e
-      local depstring+="-d ${newdep_name}32${newdep_tail} "
+      if [ ${res_check_deps} = 1 ]; then
+         local depstring+="-d ${newdep_name}${newdep_tail} "
+      else
+         local depstring+="-d ${newdep_name}32${newdep_tail} "
+      fi
   done
   mpkg-setmeta "${dest_dir}" ${depstring}
   return 0
