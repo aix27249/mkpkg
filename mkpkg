@@ -385,7 +385,6 @@ copy_abuild() {
 
 #check build tree source. download, if remote.
 bt_path(){
-  show_message EXECUTION_OF_FUNCTIONS "bt_path()"
   local abuild_path="$1"
   local ret=""
   local _bt_check=$(echo ${abuild_path} | sed -e 's/^\/.*/root/g' | sed -r 's/^http?:\/\/.*/wget/g' | sed -r 's/^ftp?:\/\/.*/wget/g' | sed -r 's/^api:.*/api/g')
@@ -408,7 +407,6 @@ bt_path(){
             ;;
   esac
   echo "${ret}"
-  show_message END_FUNCTION "bt_path()"
 }
 
 #check build tree
