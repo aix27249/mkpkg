@@ -1,8 +1,7 @@
 
 
-#ran after function build() 
+#ran after function build()
 #после сборки
-#after_build()
-#{
+#after_build(){
 
 #}

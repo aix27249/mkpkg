@@ -42,12 +42,12 @@ make_pkg64() {
   mkdir ${dest_dir}/install
   cp -r ${orig_dir}/* ${dest_dir}
   pkginfo="$(mkpkg_xml_parser ${dest_dir}/install/data.xml -p)"
-  pkgname=`echo ${pkginfo} | cut -d ' ' -f 1`
-  pkgver=`echo ${pkginfo} | cut -d ' ' -f 2`
-  pkgbuild=`echo ${pkginfo} | cut -d ' ' -f 4`
-  pkgarch=`echo ${pkginfo} | cut -d ' ' -f 3`
-  if [ ${pkgarch} != "i686" ]; then
-     show_message INCORRECT_ARCH_PACKAGE "${pkgarch}" "${PKGNAME}"
+  tpkgname=`echo ${pkginfo} | cut -d ' ' -f 1`
+  tpkgver=`echo ${pkginfo} | cut -d ' ' -f 2`
+  tpkgbuild=`echo ${pkginfo} | cut -d ' ' -f 4`
+  tpkgarch=`echo ${pkginfo} | cut -d ' ' -f 3`
+  if [ ${tpkgarch} != "i686" ]; then
+     show_message INCORRECT_ARCH_PACKAGE "${tpkgarch}" "${PKGNAME}"
      exit
   fi
 
@@ -68,68 +68,6 @@ make_pkg64() {
      rm -fr "${wd}"
   fi
   set +e
-}
-
-check_deps() {
-  IP="api.agilialinux.ru"
-  show_message CHECKING_PACKAGE_DEPS "«${newdep_name}»"
-  local dep_ver=$(echo ${newdep_tail} | sed 's/^[>=<]*//g')
-  local find_package=""
-  local name_four=`echo "${newdep_name}" | sed 's/\(.\{1,4\}\).*/\1/'`
-  if [ "${name_four}" = "wine" ]; then
-      echo -e "\e[31mAdd because the first four characters wine\e[0m"
-      return 1
-  fi
-  find_package_directory find_package ${package_out_dir} "i686 noarch"
-  if [ -z "${find_package}" ]; then
-     find_package_directory find_package ${mpkg_cache_dir} "i686 noarch"
-     if [ -z "${find_package}" ]; then
-        ping_res=1
-        /bin/ping ${IP} -c 2 > /dev/null 2>&1 && ping_res=0
-        if [ ${ping_res} -ne 0 ]; then
-           show_message UNABLE_CONNECT_SERVER "${IP}"
-           exit 1
-        fi
-        if [ -z "${dep_ver}" ]; then
-           wget --no-check-certificate -P ${package_out_dir}/deps "http://${IP}/pkg/${newdep_name}/i686"
-        else
-           wget --no-check-certificate -P ${package_out_dir}/deps "http://${IP}/pkg/${newdep_name}/i686/${dep_ver}"
-        fi
-        find_package_directory find_package ${package_out_dir}/deps "i686 noarch"
-     else
-        show_message FOUND_PACKAGE_DIR "${find_package}" "${package_out_dir}"
-     fi
-  else
-     show_message FOUND_PACKAGE_DIR "${find_package}" "${package_out_dir}"
-  fi
-  if [ -z ${find_package} ]; then
-     show_message COULD_NOT_FIND_PACKAGE "«${newdep_name}»"
-     #Когда баги с зависимостями исправятся нужно убрать lib
-     local name_three=`echo "${newdep_name}" | sed 's/\(.\{1,3\}\).*/\1/'`
-     if [ "${name_three}" != "lib" ]; then
-        exit 1
-     else
-       echo -e "\e[31mAdd because the first three characters lib\e[0m"
-       return 0
-     fi
-  fi
-  local find_package="$(readlink -f ${find_package})"
-  local deps_dir="${wd}/deps/${newdep_name}-${dep_ver}"
-  mkdir -p "${deps_dir}"
-  if ! [ -d "${deps_dir}" ]; then
-     show_message FAILED_TO_CREATE_DIR "${deps_dir}"
-     exit 1
-  fi
-  cd "${deps_dir}"
-  tar -xf "${find_package}"
-  local find_dep_lib=1
-  for f in $(find . -name '*.so') $(find . -name '*.so.*') ; do
-      local dir_name=$(dirname $f)
-      check_dir_whitelist ${dir_name} || continue
-      find_dep_lib=0
-      break
-  done
-  return ${find_dep_lib}
 }
 
 modify_deps() {

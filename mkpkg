@@ -829,7 +829,7 @@ check_desc() {
   show_message EXECUTION_OF_FUNCTIONS "check_desc() for ${startdir}/${pkgname}/install"
   local desc_dir="${startdir}/${pkgname}/install"
   mkdir -p "${desc_dir}" || exit 1
-  if [ -z "${shortdesc}" ]; then 
+  if [ -z "${shortdesc}" ]; then
      show_message NO_DESC
      exit 1
   else
@@ -852,6 +852,15 @@ check_desc() {
      fi
   fi
   show_message END_FUNCTION "check_desc() for ${startdir}/${pkgname}/install"
+}
+
+check_builddeps(){
+  show_message EXECUTION_OF_FUNCTIONS "check_builddeps() for ${startdir}/${pkgname}/install"
+  if [ -z "${build_deps}" ]; then
+       show_message NO_BUILDDEPS
+       exit 1
+  fi
+  show_message END_FUNCTION "check_builddeps() for ${startdir}/${pkgname}/install"
 }
 
 show_bad_letter() {
@@ -924,6 +933,7 @@ check_sequence() {
   check_arch ${arch} ${checked_pkg}
   check_desc
   check_tags "${tags}"
+  check_builddeps
   check_provides
 }
 

@@ -1,3 +1,9 @@
+1.3.4
+FIXED: mkpkg_32to64 and mkpkg_make64
+FIXED: Query function returned
+Move function check_deps in mkpkg_shared_functions
+Added function check_builddeps
+
 1.3.3
 Script is rewritten mkpkg_32to64, to convert packages i686 compat32 x86-64 with automatic recording dependencies
 Added automatic creation compat32 packages collected under i686

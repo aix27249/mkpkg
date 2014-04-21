@@ -352,6 +352,15 @@ uk) echo -e "Файл slack-desc не знайдений, і змінна shortd
 *) echo -e "slack-desc not found, and shortdesc var is not set. Fix it, please";;
 esac;;
 
+###########
+NO_BUILDDEPS)##############################################################
+###########
+case $lang in
+ru) echo -e "Нужно заполнить переменную build_deps.";;
+uk) echo -e "Потрібно заповнити змінну build_deps";;
+*) echo -e "Need to fill in variable build_deps";;
+esac;;
+
 ############
 SB_READY)#############################################################
 ############

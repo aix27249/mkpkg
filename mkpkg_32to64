@@ -42,12 +42,12 @@ make_compat32() {
   mkdir ${dest_dir}/install
   cp ${orig_dir}/install/data.xml ${dest_dir}/install/data.xml
   pkginfo="$(mkpkg_xml_parser ${dest_dir}/install/data.xml -p)"
-  pkgname=`echo ${pkginfo} | cut -d ' ' -f 1`
-  pkgver=`echo ${pkginfo} | cut -d ' ' -f 2`
-  pkgbuild=`echo ${pkginfo} | cut -d ' ' -f 4`
-  pkgarch=`echo ${pkginfo} | cut -d ' ' -f 3`
-  if [ ${pkgarch} != "i686" ]; then
-     show_message INCORRECT_ARCH_PACKAGE "${pkgarch}" "${PKGNAME}"
+  tpkgname=`echo ${pkginfo} | cut -d ' ' -f 1`
+  tpkgver=`echo ${pkginfo} | cut -d ' ' -f 2`
+  tpkgbuild=`echo ${pkginfo} | cut -d ' ' -f 4`
+  tpkgarch=`echo ${pkginfo} | cut -d ' ' -f 3`
+  if [ ${tpkgarch} != "i686" ]; then
+     show_message INCORRECT_ARCH_PACKAGE "${tpkgarch}" "${PKGNAME}"
      exit
   fi
   # Copy libs
@@ -68,8 +68,8 @@ make_compat32() {
   )
 
   # Copy ABUILD
-  orig_abuild=$(basename ${orig_dir}/usr/src/BuildTrees/${pkgname}-*.build_tree.tar.xz)
-  dest_abuild=$(echo ${orig_abuild} | sed s/${pkgname}/${pkgname}32/g)
+  orig_abuild=$(basename ${orig_dir}/usr/src/BuildTrees/${tpkgname}-*.build_tree.tar.xz)
+  dest_abuild=$(echo ${orig_abuild} | sed s/${tpkgname}/${tpkgname}32/g)
   if ! [ -f "${orig_dir}/usr/src/BuildTrees/${orig_abuild}" ]; then
      show_message FILE_NOT_FOUND "${orig_dir}/usr/src/BuildTrees/${orig_abuild}"
      #echo "WARNING: No ABUILD in package"
@@ -79,7 +79,7 @@ make_compat32() {
 
   # Check ABUILD
   mkdir -p "${wd}/build_tree"
-  ( cd "${wd}/build_tree" ; tar -xf "${orig_dir}/usr/src/BuildTrees/${pkgname}-${pkgver}.build_tree.tar.xz" )
+  ( cd "${wd}/build_tree" ; tar -xf "${orig_dir}/usr/src/BuildTrees/${tpkgname}-${tpkgver}.build_tree.tar.xz" )
   . "${wd}/build_tree/ABUILD"
   if [ -z "$(echo ${tags} | grep -w 'compat32')" ]; then
       show_message ABUILD_NOT_TAG «compat32»
@@ -129,7 +129,7 @@ replace_tags() {
 
 modify_meta() {
   # Set package name
-  mpkg-setmeta "${dest_dir}" --arch=x86_64 --name=${pkgname}32
+  mpkg-setmeta "${dest_dir}" --arch=x86_64 --name=${tpkgname}32
   # Clear config files
   mpkg-setmeta "${dest_dir}" -F
   # Check if provides value exists
@@ -145,68 +145,6 @@ modify_meta() {
   # Add maintainer name and email
   mpkg-setmeta "${dest_dir}" --maintainer-name=${mn} --maintainer-email=${me}
   return 0
-}
-
-check_deps() {
-  IP="api.agilialinux.ru"
-  show_message CHECKING_PACKAGE_DEPS "«${newdep_name}»"
-  local dep_ver=$(echo ${newdep_tail} | sed 's/^[>=<]*//g')
-  local find_package=""
-  local name_four=`echo "${newdep_name}" | sed 's/\(.\{1,4\}\).*/\1/'`
-  if [ "${name_four}" = "wine" ]; then
-     echo -e "\e[31mAdd because the first four characters wine\e[0m"
-     return 1
-  fi
-  find_package_directory find_package ${package_out_dir} "i686 noarch"
-  if [ -z "${find_package}" ]; then
-     find_package_directory find_package ${mpkg_cache_dir} "i686 noarch"
-     if [ -z "${find_package}" ]; then
-        ping_res=1
-        /bin/ping ${IP} -c 2 > /dev/null 2>&1 && ping_res=0
-        if [ ${ping_res} -ne 0 ]; then
-           show_message UNABLE_CONNECT_SERVER "${IP}"
-           exit 1
-        fi
-        if [ -z "${dep_ver}" ]; then
-           wget --no-check-certificate -P ${package_out_dir}/deps "http://${IP}/pkg/${newdep_name}/i686"
-        else
-           wget --no-check-certificate -P ${package_out_dir}/deps "http://${IP}/pkg/${newdep_name}/i686/${dep_ver}"
-        fi
-        find_package_directory find_package ${package_out_dir}/deps "i686 noarch"
-     else
-        show_message FOUND_PACKAGE_DIR "${find_package}" "${package_out_dir}"
-     fi
-  else
-    show_message FOUND_PACKAGE_DIR "${find_package}" "${package_out_dir}"
-  fi
-  if [ -z ${find_package} ]; then
-     show_message COULD_NOT_FIND_PACKAGE "«${newdep_name}»"
-     #Когда баги с зависимостями исправятся нужно убрать
-     local name_lib=`echo "${newdep_name}" | sed 's/\(.\{1,3\}\).*/\1/'`
-     if [ "${name_lib}" != "lib" ]; then
-        exit 1
-     else
-       echo -e "\e[31mAdd because the first three characters lib\e[0m"
-       return 0
-     fi
-  fi
-  local find_package="$(readlink -f ${find_package})"
-  local deps_dir="${wd}/deps/${newdep_name}-${dep_ver}"
-  mkdir -p "${deps_dir}"
-  if ! [ -d "${deps_dir}" ]; then
-     show_message FAILED_TO_CREATE_DIR "${deps_dir}"
-     exit 1
-  fi
-  cd "${deps_dir}"
-  tar -xf "${find_package}"
-  local find_dep_lib=1
-  for f in $(find . -name '*.so') $(find . -name '*.so.*') ; do
-      local dir_name=$(dirname $f)
-      check_dir_whitelist ${dir_name} || continue
-      find_dep_lib=0
-      break
-  done
-  return ${find_dep_lib}
 }
 
 modify_deps() {
