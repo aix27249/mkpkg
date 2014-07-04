@@ -719,7 +719,7 @@ check_abuild() {
        fi
        if [ -n "${dep_ver}" -a -n "${system_pkg_ver}" ];then
           local cmp_bad=0
-          case `mkpkg_vercmp $dep_ver $system_pkg_ver` in
+          case `mpkg-vercmp $dep_ver $system_pkg_ver` in
                -1)
                     if [ ! "${sign}" = ">" -a ! "${sign}" = ">=" ]; then
                        cmp_bad=1
