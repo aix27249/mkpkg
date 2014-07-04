@@ -106,6 +106,7 @@ net-wireless
 net-zope
 sci-mathematics
 sci-visualization
+sci-libs
 sys-apps
 sys-auth
 sys-base
