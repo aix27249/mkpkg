@@ -29,7 +29,7 @@ pkglist=
 docs=
 gendeps_blacklist=
 
-#custom_opts: skip_validate skip_gendeps no_postperm no_strip no_ccache
+#custom_opts: skip_validate skip_gendeps no_postperm no_strip no_ccache no_copydoc
 custom_opts=""
 
 #before_build(){
