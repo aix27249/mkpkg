@@ -92,9 +92,9 @@ check_deps() {
            exit 1
         fi
         if [ -z "${dep_ver}" ]; then
-           wget --no-check-certificate -P ${package_out_dir}/deps "http://${IP}/pkg/${newdep_name}/i686"
+           wget --no-check-certificate -P ${package_out_dir}/deps --content-disposition "http://${IP}/pkg/${newdep_name}/i686"
         else
-           wget --no-check-certificate -P ${package_out_dir}/deps "http://${IP}/pkg/${newdep_name}/i686/${dep_ver}"
+           wget --no-check-certificate -P ${package_out_dir}/deps --content-disposition "http://${IP}/pkg/${newdep_name}/i686/${dep_ver}"
         fi
         find_package_directory find_package ${package_out_dir}/deps "i686 noarch"
      else
